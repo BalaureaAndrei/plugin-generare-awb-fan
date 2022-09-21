@@ -29,9 +29,11 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
  */
 
 
-include(plugin_dir_path(__FILE__) . './includes/post_file_on_server.php');
 include(plugin_dir_path(__FILE__) . './includes/add_admin_menu.php');
 include(plugin_dir_path(__FILE__) . './includes/post-fan.php');
+include(plugin_dir_path(__FILE__) . './includes/request-strazi.php');
+include(plugin_dir_path(__FILE__) . './includes/request-strazi-checkout.php');
+include(plugin_dir_path(__FILE__) . './includes/post_file_on_server.php');
 
 $domain = get_option('fan_options')['domain'];
 
@@ -251,7 +253,7 @@ add_action('woocommerce_admin_order_data_after_order_details', 'kia_display_orde
 
 
 // CUSTOM BULK ACTION GENERARE AWB
-// Adding to admin order list bulk dropdown a custom action 'custom_GENERARE AWB'
+// Adding to admin order list bulk dropdown a custom action 'custom_generare_awb'
 
 
 add_filter('bulk_actions-edit-shop_order', 'generate_bulk_actions_edit_product', 20, 1);
@@ -362,6 +364,17 @@ function generate_bulk_action_admin_notice()
     printf("<div id='message'>S-a generat awb pentru $count comenzi</div>");
 }
 
-// require 'post-fan.php';
-// require 'post_file_on_server.php';
-// require 'script_autogenerare_strada.php';
+
+// Adding scripts to wp_checkout
+
+add_action('wp_footer', 'add_checkout_script', 9999);
+
+function add_checkout_script()
+{
+    global $wp;
+    if (is_checkout() && empty($wp->query_vars['order-pay']) && !isset($wp->query_vars['order-received'])) {
+    ?>
+
+<?php
+    }
+}
